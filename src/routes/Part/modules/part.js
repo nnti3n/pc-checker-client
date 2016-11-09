@@ -40,6 +40,7 @@ export function requestSaveList (value): Action {
 export function saveList (result): Action {
   return {
     type: SAVE_LIST,
+    payload: result
   }
 }
 
@@ -57,8 +58,23 @@ export function saveCurrentPart (selected): Action {
   }
 }
 
+export const sendParts = (value): Function => {
+  return (dispatch: Function): Promise => {
+    console.log('wrong-click', value)
+    dispatch(requestSaveList())
+
+    return fetch('http://pcchecker.herokuapp.com/createBuild/', {
+      method: 'POST',
+      body: {items: value}
+    })
+      .then(res => res.json())
+      .then(data => dispatch(saveList(data.result)))
+  }
+}
+
 export const fetchPart = (): Function => {
   return (dispatch: Function): Promise => {
+    console.log('wrong-click-1')
     dispatch(requestPart())
 
     return fetch('http://pcchecker.herokuapp.com/getProducts/Bàn Phím Steelseries /')
@@ -71,7 +87,10 @@ export const actions = {
   requestPart,
   recievePart,
   fetchPart,
-  saveCurrentPart
+  saveCurrentPart,
+  requestSaveList,
+  saveList,
+  sendParts
 }
 
 // ------------------------------------
@@ -83,16 +102,16 @@ const PART_ACTION_HANDLERS = {
     return ({ ...state, fetching: true })
   },
   [RECIEVE_PART]: (state: PartStateObject, action: {payload: Array<PartObject>}): PartStateObject => {
-    return ({ ...state, parts: action.payload, current:null, fetching: false })
+    return ({ ...state, parts: action.payload, current: null, fetching: false })
   },
   [SAVE_CURRENT_PART]: (state: PartStateObject, action: {payload: PartObject}): PartStateObject => {
-    return ({ ...state, current: action.payload, saved: state.saved.concat(action.payload) }) 
+    return ({ ...state, current: action.payload, saved: state.saved.concat(action.payload) })
   },
   [REQUEST_SAVE_LIST]: (state: PartStateObject): PartStateObject => {
     return ({ ...state, sending: true })
   },
-  [SAVE_LIST]: (state: PartStateObject, action: {payload: Array<PartObject>}): PartStateObject => {
-    return ({ ...state, parts: action.payload, current:null, sending: false })
+  [SAVE_LIST]: (state: PartStateObject, action: {payload: PartObject}): PartStateObject => {
+    return ({ ...state, current: null, sending: false })
   }
 
 }
@@ -101,7 +120,7 @@ const PART_ACTION_HANDLERS = {
 // Reducers
 // ------------------------------------
 
-const initialState: PartStateObject = { fetching: false, current: null, parts: [], saved: [] }
+const initialState: PartStateObject = { fetching: false, sending: false, current: null, parts: [], saved: [], list_saved: null }
 export default function partReducer (state: PartStateObject = initialState, action: Action): PartStateObject {
   const handler = PART_ACTION_HANDLERS[action.type]
 

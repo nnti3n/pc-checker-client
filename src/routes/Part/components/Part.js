@@ -9,28 +9,29 @@ type Props = {
   saved: Array<PartObject>,
   fetchPart: Function,
   saveCurrentPart: Function,
+  sendParts: Function,
 }
 
 class SaveButton extends React.Component {
-  handleClick(e) {
+  handleClick (e) {
     e.preventDefault()
-    console.log('this is:', this)
+    console.log(this)
     let objectItem = this.props.objectItem
     // this.props.saveCurrentPart(this)
     this.props.prop.saveCurrentPart(objectItem)
   }
 
-  render() {
+  render () {
     // This syntax ensures `this` is bound within handleClick
     return (
       <button className='btn btn-default badge' onClick={(e) => this.handleClick(e)}>
         Save
       </button>
-    );
+    )
   }
 }
 
-let idGenerated = 0;
+let idGenerated = 0
 export const Part = (props: Props) => (
   <div>
     <div>
@@ -44,18 +45,17 @@ export const Part = (props: Props) => (
           </tr>
         </thead>
         <tbody>
-          {props.part.length? props.part.map(part =>
+          {props.part.length ? props.part.map(part =>
             <tr key={part.id}>
-                <td>{part.title}</td>
-                <td>{part.price}</td>
-                <td><a href={part.link} target='_blank'>{part.vendor}</a></td>
-                <td><SaveButton prop={props} objectItem={{id: part.id, title: part.title}}/></td>
-            </tr> 
-          ) : ' '}
+              <td>{part.title}</td>
+              <td>{part.price}</td>
+              <td><a href={part.link} target='_blank'>{part.vendor}</a></td>
+              <td><SaveButton prop={props} objectItem={{id: part.id, title: part.title}} /></td>
+            </tr>) : ' '}
         </tbody>
       </table>
-      <button className='btn btn-default' onClick={props.fetchPart}>
-        Fetch a wisdom
+      <button type="button" className='btn btn-default' onClick={props.fetchPart}>
+        Load
       </button>
     </div>
     {props.saved.length
@@ -70,17 +70,26 @@ export const Part = (props: Props) => (
             </li>
           )}
         </ul>
+        <button type="button" className='btn btn-primary' onClick={props.sendParts(props.saved)}>
+          Save Parts
+        </button>
       </div>
       : null
     }
   </div>
 )
 
+SaveButton.propTypes = {
+  prop: React.PropTypes.object.isRequired,
+  objectItem: React.PropTypes.object.isRequired
+}
+
 Part.propTypes = {
   part: React.PropTypes.array.isRequired,
   saved: React.PropTypes.array.isRequired,
   fetchPart: React.PropTypes.func.isRequired,
-  saveCurrentPart: React.PropTypes.func.isRequired
+  saveCurrentPart: React.PropTypes.func.isRequired,
+  sendParts: React.PropTypes.func.isRequired
 }
 
 export default Part
