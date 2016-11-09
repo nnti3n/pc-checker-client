@@ -18,7 +18,7 @@ class SaveButton extends React.Component {
     console.log(this)
     let objectItem = this.props.objectItem
     // this.props.saveCurrentPart(this)
-    this.props.prop.saveCurrentPart(objectItem)
+    this.props.prop(objectItem)
   }
 
   render () {
@@ -50,7 +50,7 @@ export const Part = (props: Props) => (
               <td>{part.title}</td>
               <td>{part.price}</td>
               <td><a href={part.link} target='_blank'>{part.vendor}</a></td>
-              <td><SaveButton prop={props} objectItem={{id: part.id, title: part.title}} /></td>
+              <td><SaveButton prop={props.saveCurrentPart} objectItem={{id: part.id, title: part.title}} /></td>
             </tr>) : ' '}
         </tbody>
       </table>
@@ -61,7 +61,7 @@ export const Part = (props: Props) => (
     {props.saved.length
       ? <div className={classes.savedWisdoms}>
         <h3>
-          Saved wisdoms
+          Saved component
         </h3>
         <ul>
           {props.saved.map(part =>
@@ -70,17 +70,17 @@ export const Part = (props: Props) => (
             </li>
           )}
         </ul>
-        <button type="button" className='btn btn-primary' onClick={props.sendParts(props.saved)}>
-          Save Parts
-        </button>
       </div>
       : null
     }
+    <button type="button" className='btn btn-primary' onClick={() => { props.sendParts(props.saved) }}>
+      Save Parts
+    </button>
   </div>
 )
 
 SaveButton.propTypes = {
-  prop: React.PropTypes.object.isRequired,
+  prop: React.PropTypes.func.isRequired,
   objectItem: React.PropTypes.object.isRequired
 }
 

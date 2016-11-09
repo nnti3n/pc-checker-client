@@ -59,13 +59,18 @@ export function saveCurrentPart (selected): Action {
 }
 
 export const sendParts = (value): Function => {
+  let arrayData = []
+  for (let attr of value) {
+    arrayData.push(attr.id)
+  }
   return (dispatch: Function): Promise => {
-    console.log('wrong-click', value)
+    let data = {items: arrayData}
+    console.log('wrong-click', data)
     dispatch(requestSaveList())
 
-    return fetch('http://pcchecker.herokuapp.com/createBuild/', {
+    return fetch('http://pcchecker.herokuapp.com/createBuild', {
       method: 'POST',
-      body: {items: value}
+      body: data
     })
       .then(res => res.json())
       .then(data => dispatch(saveList(data.result)))
@@ -74,7 +79,6 @@ export const sendParts = (value): Function => {
 
 export const fetchPart = (): Function => {
   return (dispatch: Function): Promise => {
-    console.log('wrong-click-1')
     dispatch(requestPart())
 
     return fetch('http://pcchecker.herokuapp.com/getProducts/Bàn Phím Steelseries /')
