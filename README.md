@@ -8,23 +8,6 @@ PC Checker Client
 [![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com/)
 
 
-Table of Contents
------------------
-1. [Requirements](#requirements)
-1. [Features](#features)
-1. [Getting Started](#getting-started)
-1. [Usage](#usage)
-1. [CLI Generators](#cli-generators)
-1. [Structure](#structure)
-1. [Webpack](#webpack)
-1. [Server](#server)
-1. [Styles](#styles)
-1. [Testing](#testing)
-1. [Deployment](#deployment)
-1. [Troubleshooting](#troubleshooting)
-1. [Learning Resources](#learning-resources)
-1. [Thank You](#thank-you)
-
 Requirements
 ------------
 
