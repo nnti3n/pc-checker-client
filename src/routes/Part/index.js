@@ -1,7 +1,7 @@
 import { injectReducer } from '../../store/reducers'
 
 export default (store) => ({
-  path: 'part',
+  path: '/part',
   getComponent (nextState, next) {
     require.ensure([
       './containers/PartContainer',
@@ -11,12 +11,10 @@ export default (store) => ({
       will not loaded until the router invokes this callback. */
       const Part = require('./containers/PartContainer').default
       const partReducer = require('./modules/part').default
-
       injectReducer(store, {
         key: 'part',
         reducer: partReducer
       })
-
       next(null, Part)
     })
   }

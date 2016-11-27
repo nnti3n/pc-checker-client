@@ -11,4 +11,3 @@ export type PartStateObject = {
   saved: Array<PartObject>,
   parts: Array<PartObject>
 }
-
