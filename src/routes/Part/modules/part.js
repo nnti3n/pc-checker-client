@@ -22,7 +22,6 @@ export function requestPart (): Action {
   }
 }
 
-let availableId = 0
 export function recievePart (value): Action {
   return {
     type: RECIEVE_PART,
@@ -30,10 +29,9 @@ export function recievePart (value): Action {
   }
 }
 
-export function requestSaveList (value): Action {
+export function requestSaveList (): Action {
   return {
-    type: REQUEST_SAVE_LIST,
-    payload: value
+    type: REQUEST_SAVE_LIST
   }
 }
 
@@ -52,6 +50,7 @@ export function recieveList (id): Action {
 }
 
 export function saveCurrentPart (selected): Action {
+  console.log(selected)
   return {
     type: SAVE_CURRENT_PART,
     payload: selected
@@ -64,24 +63,24 @@ export const sendParts = (value): Function => {
     arrayData.push(attr.id)
   }
   return (dispatch: Function): Promise => {
-    let data = {items: arrayData}
-    console.log('wrong-click', data)
+    let send = JSON.stringify({items: arrayData})
+    console.log('wrong-click', send)
     dispatch(requestSaveList())
 
     return fetch('http://pcchecker.herokuapp.com/createBuild', {
       method: 'POST',
-      body: data
+      body: send
     })
       .then(res => res.json())
-      .then(data => dispatch(saveList(data.result)))
+      .then(data => dispatch(saveList(data)))
   }
 }
 
-export const fetchPart = (): Function => {
+export const fetchPart = (name): Function => {
   return (dispatch: Function): Promise => {
     dispatch(requestPart())
 
-    return fetch('http://pcchecker.herokuapp.com/getProducts/Bàn Phím Steelseries /')
+    return fetch(`http://pcchecker.herokuapp.com/getProducts?query=${name}`)
       .then(res => res.json())
       .then(data => dispatch(recievePart(data.result)))
   }
@@ -103,7 +102,7 @@ export const actions = {
 
 const PART_ACTION_HANDLERS = {
   [REQUEST_PART]: (state: PartStateObject): PartStateObject => {
-    return ({ ...state, fetching: true })
+    return ({ ...state, parts: [], fetching: true })
   },
   [RECIEVE_PART]: (state: PartStateObject, action: {payload: Array<PartObject>}): PartStateObject => {
     return ({ ...state, parts: action.payload, current: null, fetching: false })
@@ -114,20 +113,24 @@ const PART_ACTION_HANDLERS = {
   [REQUEST_SAVE_LIST]: (state: PartStateObject): PartStateObject => {
     return ({ ...state, sending: true })
   },
-  [SAVE_LIST]: (state: PartStateObject, action: {payload: PartObject}): PartStateObject => {
-    return ({ ...state, current: null, sending: false })
+  [SAVE_LIST]: (state: PartStateObject, action: {payload: string}): PartStateObject => {
+    return ({ ...state, list_saved: action.payload, sending: false })
   }
-
 }
 
 // ------------------------------------
 // Reducers
 // ------------------------------------
 
-const initialState: PartStateObject = { fetching: false, sending: false, current: null, parts: [], saved: [], list_saved: null }
+const initialState: PartStateObject = {
+  fetching: false,
+  sending: false,
+  current: null,
+  parts: [],
+  saved: [],
+  list_saved: null
+}
 export default function partReducer (state: PartStateObject = initialState, action: Action): PartStateObject {
   const handler = PART_ACTION_HANDLERS[action.type]
-
   return handler ? handler(state, action) : state
 }
-
