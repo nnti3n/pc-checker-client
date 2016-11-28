@@ -12,7 +12,7 @@
     "compile": "better-npm-run compile",
     "lint": "eslint .",
     "lint:fix": "npm run lint -- --fix",
-    "start": "babel-node bin/server",
+    "start": "better-npm-run start",
     "dev": "better-npm-run dev",
     "dev:nw": "npm run dev -- --nw",
     "dev:no-debug": "npm run dev -- --no_debug",
