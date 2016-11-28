@@ -116,7 +116,7 @@
     "react-redux": "^4.0.0",
     "react-router": "^2.2.0",
     "react-router-redux": "^4.0.0",
-    "react-tap-event-plugin":"^2.0.0",
+    "react-tap-event-plugin": "^2.0.0",
     "redux": "^3.0.0",
     "redux-thunk": "^2.0.0",
     "rimraf": "^2.5.1",
@@ -124,6 +124,7 @@
     "style-loader": "^0.13.0",
     "url-loader": "^0.5.6",
     "webpack": "^1.12.14",
+    "webpack-dev-middleware": "^1.6.1",
     "yargs": "^4.0.0"
   },
   "devDependencies": {
