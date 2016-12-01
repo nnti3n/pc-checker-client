@@ -5,15 +5,21 @@ class SearchBar extends React.Component {
 
   constructor (props) {
     super(props)
-    this._onBlur = this._onBlur.bind(this)
+    this._onChange = this._onChange.bind(this)
     this._onClick = this._onClick.bind(this)
+    this._onEnter = this._onEnter.bind(this)
     this.state = {typed: ''}
   }
 
-  _onBlur (event) {
+  _onChange (event) {
     if (event.target.value.length) {
       this.setState({typed: event.target.value})
-      this.props.fetch(event.target.value)
+    }
+  }
+
+  _onEnter (event) {
+    if (event.charCode === 13) {
+      this.props.fetch(this.state.typed)
     }
   }
 
@@ -27,11 +33,17 @@ class SearchBar extends React.Component {
   render () {
     return (
       <div className="Search form-group u-text-align--left u-margin-bottom--24">
-        <label>Component Name:</label>
-        <input type="text" onBlur={this._onBlur} />
-        <button type="submit" className='btn btn-primary' onClick={this._onClick}>
-          Search
-        </button>
+        <div id="custom-search-input">
+          <div className="input-group col-md-12">
+            <input type="text" className="form-control input-lg" placeholder="Component Name"
+              onChange={this._onChange} onKeyPress={this._onEnter} />
+            <span className="input-group-btn">
+              <button className="btn btn-info btn-lg" type="submit" onClick={this._onClick}>
+                <i className="glyphicon glyphicon-search"></i>
+              </button>
+            </span>
+          </div>
+        </div>
       </div>
     )
   }

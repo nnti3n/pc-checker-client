@@ -67,7 +67,7 @@ export const sendParts = (value): Function => {
     console.log('wrong-click', send)
     dispatch(requestSaveList())
 
-    return fetch('pcchecker.herokuapp.com/createBuild', {
+    return fetch('http://pcchecker.herokuapp.com/createBuild', {
       method: 'POST',
       body: send
     })
@@ -80,7 +80,7 @@ export const fetchPart = (name): Function => {
   return (dispatch: Function): Promise => {
     dispatch(requestPart())
 
-    return fetch(`pcchecker.herokuapp.com/getProducts?query=${name}`)
+    return fetch(`http://pcchecker.herokuapp.com/getProducts?query=${name}`)
       .then(res => res.json())
       .then(data => dispatch(recievePart(data.result)))
   }
