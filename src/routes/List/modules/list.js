@@ -38,7 +38,7 @@ export const fetchList = (url): Function => {
   return (dispatch: Function): Promise => {
     dispatch(requestList())
     // Thunk
-    return fetch(`pcchecker.herokuapp.com/build/${url}`)
+    return fetch(`http://pcchecker.herokuapp.com/build/${url}`)
       .then(res => res.json())
       .then(data => dispatch(recieveList(data.result.detail)))
       .catch(er => console.log(er))
