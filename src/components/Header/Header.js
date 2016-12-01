@@ -12,6 +12,10 @@ export const Header = () => (
     <Link to='part' activeClassName={classes.activeRoute}>
       Build List
     </Link>
+    {' · '}
+    <Link to='recent' activeClassName={classes.activeRoute}>
+      Recent Build
+    </Link>
   </div>
 )
 
