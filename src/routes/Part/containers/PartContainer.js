@@ -1,6 +1,6 @@
 /* @flow */
 import { connect } from 'react-redux'
-import { fetchPart, saveCurrentPart, sendParts} from '../modules/part'
+import { fetchPart, saveCurrentPart, sendParts } from '../modules/part'
 
 import Part from '../components/Part'
 
