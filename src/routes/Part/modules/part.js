@@ -5,6 +5,8 @@ import type { PartObject, PartStateObject } from '../interfaces/part.js'
 // ------------------------------------
 // Constants
 // ------------------------------------
+export const REQUEST_AC = 'REQUEST_AC'
+export const RECIEVE_AC = 'RECIEVE_AC'
 export const REQUEST_PART = 'REQUEST_PART'
 export const RECIEVE_PART = 'RECIEVE_PART'
 export const SAVE_CURRENT_PART = 'SAVE_CURRENT_PART'
@@ -15,6 +17,19 @@ export const SAVE_LIST = 'SAVE_LIST'
 // ------------------------------------
 // Actions
 // ------------------------------------
+
+export function requestAC (): Action {
+  return {
+    type: REQUEST_AC
+  }
+}
+
+export function recieveAC (value): Action {
+  return {
+    type: RECIEVE_AC,
+    payload: value
+  }
+}
 
 export function requestPart (): Action {
   return {
@@ -86,9 +101,22 @@ export const fetchPart = (name): Function => {
   }
 }
 
+export const fetchAC = (value): Function => {
+  return (dispatch: Function): Promise => {
+    dispatch(requestPart())
+
+    return fetch(`http://pcchecker.herokuapp.com/autocomplete?querystring=${value}&limit=10&skip=0`)
+      .then(res => res.json())
+      .then(data => dispatch(recieveAC(data.result)))
+  }
+}
+
 export const actions = {
+  requestAC,
+  recieveAC,
   requestPart,
   recievePart,
+  fetchAC,
   fetchPart,
   saveCurrentPart,
   requestSaveList,
@@ -101,6 +129,12 @@ export const actions = {
 // ------------------------------------
 
 const PART_ACTION_HANDLERS = {
+  [REQUEST_AC]: (state: PartStateObject): PartStateObject => {
+    return ({ ...state, autoCompleteLoad: [], autoComplete: true })
+  },
+  [RECIEVE_AC]: (state: PartStateObject, action: {payload: Array}): PartStateObject => {
+    return ({ ...state, autoCompleteLoad: action.payload, autoComplete: false })
+  },
   [REQUEST_PART]: (state: PartStateObject): PartStateObject => {
     return ({ ...state, parts: [], fetching: true })
   },
@@ -123,9 +157,11 @@ const PART_ACTION_HANDLERS = {
 // ------------------------------------
 
 const initialState: PartStateObject = {
+  autoComplete: false,
   fetching: false,
   sending: false,
   current: null,
+  autoCompleteLoad: [],
   parts: [],
   saved: [],
   list_saved: null

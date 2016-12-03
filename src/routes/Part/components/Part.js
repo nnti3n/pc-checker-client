@@ -67,7 +67,7 @@ SaveList.propsTypes = {
 let idGenerated = 0
 export const Part = (props: Props) => (
   <div className="Part">
-    <SearchBar fetch={props.fetchPart} />
+    <SearchBar fetchAC={props.fetchAC} fetch={props.fetchPart} autoCompleteLoad={props.autoCompleteLoad} />
     <div className="ComponentList">
       {props.part.length
         ? <table className="table table-hover text-left">
@@ -85,7 +85,7 @@ export const Part = (props: Props) => (
               <td>{part.title}</td>
               <td>{part.price}</td>
               <td><a href={part.link} target='_blank'>{part.vendor}</a></td>
-              <td><SavePart save={props.saveCurrentPart} objectItem={{id: part.id, title: part.title}}/></td>
+              <td><SavePart save={props.saveCurrentPart} objectItem={{id: part.id, title: part.title}} /></td>
             </tr>)}
           </tbody>
         </table>
@@ -118,7 +118,9 @@ Part.propTypes = {
   id: React.PropTypes.string,
   part: React.PropTypes.array,
   saved: React.PropTypes.array,
+  autoCompleteLoad: React.PropTypes.array,
   list_saved: React.PropTypes.object,
+  fetchAC: React.PropTypes.func,
   fetchPart: React.PropTypes.func,
   saveCurrentPart: React.PropTypes.func,
   sendParts: React.PropTypes.func
