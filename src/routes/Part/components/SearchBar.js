@@ -12,8 +12,11 @@ class SearchBar extends React.Component {
   }
 
   _onChange (event) {
-    if (event.target.value.length) {
+    if (event.target.value) {
       this.setState({typed: event.target.value})
+    }
+    if (event.target.value && event.target.value.length > 2) {
+      this.props.fetchAC(event.target.value)
     }
   }
 
@@ -35,11 +38,18 @@ class SearchBar extends React.Component {
       <div className="Search form-group u-text-align--left u-margin-bottom--24">
         <div id="custom-search-input">
           <div className="input-group col-md-12">
-            <input type="text" className="form-control input-lg" placeholder="Component Name"
-              onChange={this._onChange} onKeyPress={this._onEnter} />
+            <input type="text" className="form-control input-md" placeholder="Component Name"
+              list="suggestion" onChange={this._onChange} onKeyPress={this._onEnter} />
+            <datalist id="suggestion">
+              {this.props.autoCompleteLoad
+                ? this.props.autoCompleteLoad.map(
+                item => <option id={item.id} value={item.title.replace(/\t|\n/g,'') +
+                ' ' + item.price + ' ' + item.vendor} > </option>
+              ) : null}
+            </datalist>
             <span className="input-group-btn">
               <button className="btn btn-info btn-lg" type="submit" onClick={this._onClick}>
-                <i className="glyphicon glyphicon-search"></i>
+                <i className="glyphicon glyphicon-search"> </i>
               </button>
             </span>
           </div>
@@ -51,7 +61,9 @@ class SearchBar extends React.Component {
 }
 
 SearchBar.propTypes = {
-  fetch: React.PropTypes.func
+  fetch: React.PropTypes.func,
+  fetchAC: React.PropTypes.func,
+  autoCompleteLoad: React.PropTypes.array
 }
 
 export default SearchBar
