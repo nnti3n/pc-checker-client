@@ -4,6 +4,7 @@ import { Link } from 'react-router'
 import classes from './Part.scss'
 
 import SearchBar from './SearchBar.js'
+import Price from '../../../components/Price'
 import type { PartObject } from '../interfaces/part'
 
 type Props = {
@@ -83,7 +84,7 @@ export const Part = (props: Props) => (
           {props.part.map(part =>
             <tr key={part.id}>
               <td>{part.title}</td>
-              <td>{part.price}</td>
+              <td><Price value={part.price}/></td>
               <td><a href={part.link} target='_blank'>{part.vendor}</a></td>
               <td><SavePart save={props.saveCurrentPart} objectItem={{id: part.id, title: part.title}} /></td>
             </tr>)}
