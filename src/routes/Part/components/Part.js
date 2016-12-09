@@ -1,7 +1,6 @@
 /* @flow */
 import React from 'react'
 import { Link } from 'react-router'
-import classes from './Part.scss'
 
 import SearchBar from './SearchBar.js'
 import SaveList from './SaveList.js'
@@ -21,51 +20,53 @@ type Props = {
 
 let idGenerated = 0
 export const Part = (props: Props) => (
-  <div className="Part">
+  <div className="Container">
     <SearchBar fetchAC={props.fetchAC} fetch={props.fetchPart} autoCompleteLoad={props.autoCompleteLoad} />
-    <div className="ComponentList">
-      {props.part.length
-        ? <table className="table table-hover text-left">
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Price</th>
-              <th>Vendor</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>
-          {props.part.map(part =>
-            <tr key={part.id}>
-              <td>{part.title}</td>
-              <td><Price value={part.price_today.price} /></td>
-              <td><a href={part.link} target='_blank'>{part.vendor}</a></td>
-              <td><SavePart save={props.saveCurrentPart} objectItem={{id: part.id, title: part.title}} /></td>
-            </tr>)}
-          </tbody>
-        </table>
-      : ' '}
-    </div>
-    {props.saved.length
-      ? <div className={classes.savedWisdoms}>
-        <h3>
-          Saved component
-        </h3>
-        <ul>
-          {props.saved.map(part =>
-            <li key={idGenerated++}>
-              {part.title}
-            </li>
-          )}
-        </ul>
-        <SaveList send={props.sendParts} saved_item={props.saved} />
+    <div className="Part">
+      <div className="ComponentList col-xs-9">
+        {props.part.length
+          ? <table className="table table-hover text-left">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Price</th>
+                <th>Vendor</th>
+                <th> </th>
+              </tr>
+            </thead>
+            <tbody>
+            {props.part.map(part =>
+              <tr key={part.id}>
+                <td>{part.title}</td>
+                <td><Price value={part.price_today.price} /></td>
+                <td><a href={part.link} target='_blank'>{part.vendor}</a></td>
+                <td><SavePart save={props.saveCurrentPart} objectItem={{id: part.id, title: part.title}} /></td>
+              </tr>)}
+            </tbody>
+          </table>
+        : ' '}
       </div>
-      : null
-    }
-    {props.list_saved
-      ? <div>URL to share <Link to={`/list/${props.list_saved.result}`}>{props.list_saved.result}</Link></div>
-      : null
-    }
+      {props.saved.length
+        ? <div className="col-xs-3">
+          <h3>
+            Saved component
+          </h3>
+          <ul>
+            {props.saved.map(part =>
+              <li key={idGenerated++}>
+                {part.title}
+              </li>
+            )}
+          </ul>
+          <SaveList send={props.sendParts} saved_item={props.saved} />
+        </div>
+        : null
+      }
+      {props.list_saved
+        ? <div>URL to share <Link to={`/list/${props.list_saved.result}`}>{props.list_saved.result}</Link></div>
+        : null
+      }
+    </div>
   </div>
 )
 
