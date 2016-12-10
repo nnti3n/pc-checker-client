@@ -1,6 +1,6 @@
 /* @flow */
 import React from 'react'
-import '../../../components/Price'
+import Price from '../../../components/Price'
 
 class List extends React.Component {
   constructor () {
@@ -30,7 +30,7 @@ class List extends React.Component {
           {this.props.list.list.length ? this.props.list.list.map(item =>
             <tr key={item.id}>
               <td>{item.title}</td>
-              <td><Price value={part.price}/></td>
+              <td><Price value={item.price_today.price} /></td>
               <td><a href={item.link} target='_blank'>{item.vendor}</a></td>
             </tr>) : ' '}
           </tbody>

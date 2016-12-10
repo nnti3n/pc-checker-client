@@ -8,21 +8,24 @@ class SearchBar extends React.Component {
     this._onChange = this._onChange.bind(this)
     this._onClick = this._onClick.bind(this)
     this._onEnter = this._onEnter.bind(this)
-    this.state = {typed: ''}
+    this.state = {typed: '', autoCompleteLoad: []}
   }
 
   _onChange (event) {
-    if (event.target.value) {
+    if (event.target.value && event.target.value.length <= 2) {
+      this.setState({typed: event.target.value, autoCompleteLoad: []})
+    } else if (event.target.value && event.target.value.length > 2) {
       this.setState({typed: event.target.value})
-    }
-    if (event.target.value && event.target.value.length > 2) {
-      this.props.fetchAC(event.target.value)
+      this.props.fetchAC(event.target.value).then(() => this.setState({
+        autoCompleteLoad: this.props.autoCompleteLoad
+      }))
     }
   }
 
   _onEnter (event) {
     if (event.charCode === 13) {
       this.props.fetch(this.state.typed)
+      this.setState({autoCompleteLoad: []})
     }
   }
 
@@ -30,6 +33,7 @@ class SearchBar extends React.Component {
     event.preventDefault()
     if (this.state.typed.length) {
       this.props.fetch(this.state.typed)
+      this.setState({autoCompleteLoad: []})
     }
   }
 
@@ -41,10 +45,9 @@ class SearchBar extends React.Component {
             <input type="text" className="form-control input-md" placeholder="Component Name"
               list="suggestion" onChange={this._onChange} onKeyPress={this._onEnter} />
             <datalist id="suggestion">
-              {this.props.autoCompleteLoad
-                ? this.props.autoCompleteLoad.map(
-                item => <option id={item.id} value={item.title.replace(/\t|\n/g,'') +
-                ' ' + item.price + ' ' + item.vendor} > </option>
+              {this.state.autoCompleteLoad.length
+                ? this.state.autoCompleteLoad.map(
+                item => <option key={item.id} value={item.title.replace(/\t|\n/g, '')} > </option>
               ) : null}
             </datalist>
             <span className="input-group-btn">

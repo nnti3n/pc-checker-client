@@ -87,7 +87,7 @@ export const sendParts = (value): Function => {
       body: send
     })
       .then(res => res.json())
-      .then(data => dispatch(saveList(data)))
+      .then(data => dispatch(saveList(data.result)))
   }
 }
 
@@ -142,7 +142,10 @@ const PART_ACTION_HANDLERS = {
     return ({ ...state, parts: action.payload, current: null, fetching: false })
   },
   [SAVE_CURRENT_PART]: (state: PartStateObject, action: {payload: PartObject}): PartStateObject => {
-    return ({ ...state, current: action.payload, saved: state.saved.concat(action.payload) })
+    return ({ ...state,
+      current: action.payload,
+      saved: state.saved.concat(action.payload),
+      total_price: state.total_price + action.payload.price})
   },
   [REQUEST_SAVE_LIST]: (state: PartStateObject): PartStateObject => {
     return ({ ...state, sending: true })
@@ -164,7 +167,8 @@ const initialState: PartStateObject = {
   autoCompleteLoad: [],
   parts: [],
   saved: [],
-  list_saved: null
+  total_price: 0,
+  list_saved: ''
 }
 export default function partReducer (state: PartStateObject = initialState, action: Action): PartStateObject {
   const handler = PART_ACTION_HANDLERS[action.type]
