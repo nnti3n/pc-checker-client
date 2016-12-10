@@ -16,7 +16,7 @@ class SearchBar extends React.Component {
       this.setState({typed: event.target.value, autoCompleteLoad: []})
     } else if (event.target.value && event.target.value.length > 2) {
       this.setState({typed: event.target.value})
-      this.props.fetchAC(event.target.value).then(this.setState({
+      this.props.fetchAC(event.target.value).then(() => this.setState({
         autoCompleteLoad: this.props.autoCompleteLoad
       }))
     }
@@ -24,10 +24,8 @@ class SearchBar extends React.Component {
 
   _onEnter (event) {
     if (event.charCode === 13) {
-      this.props.fetch(this.state.typed).then(
-        this.setState({
-          autoCompleteLoad: []
-        }))
+      this.props.fetch(this.state.typed)
+      this.setState({autoCompleteLoad: []})
     }
   }
 
@@ -35,6 +33,7 @@ class SearchBar extends React.Component {
     event.preventDefault()
     if (this.state.typed.length) {
       this.props.fetch(this.state.typed)
+      this.setState({autoCompleteLoad: []})
     }
   }
 
@@ -48,8 +47,7 @@ class SearchBar extends React.Component {
             <datalist id="suggestion">
               {this.state.autoCompleteLoad.length
                 ? this.state.autoCompleteLoad.map(
-                item => <option key={item.id} value={item.title.replace(/\t|\n/g, '') +
-                ' ' + item.price + ' ' + item.vendor} > </option>
+                item => <option key={item.id} value={item.title.replace(/\t|\n/g, '')} > </option>
               ) : null}
             </datalist>
             <span className="input-group-btn">
