@@ -18,7 +18,8 @@ const mapStateToProps = function (state, ownProps): { part: Array<PartObject>, s
     autoCompleteLoad: state.part.autoCompleteLoad,
     part: state.part.parts,
     saved: state.part.saved,
-    list_saved: state.part.list_saved
+    list_saved: state.part.list_saved,
+    total_price: state.part.total_price
   }
 }
 

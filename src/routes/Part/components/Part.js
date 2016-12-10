@@ -1,6 +1,5 @@
 /* @flow */
 import React from 'react'
-import { Link } from 'react-router'
 
 import SearchBar from './SearchBar.js'
 import SaveList from './SaveList.js'
@@ -18,7 +17,6 @@ type Props = {
   sendParts: Function,
 }
 
-let idGenerated = 0
 export const Part = (props: Props) => (
   <div className="Container">
     <SearchBar fetchAC={props.fetchAC} fetch={props.fetchPart} autoCompleteLoad={props.autoCompleteLoad} />
@@ -40,30 +38,21 @@ export const Part = (props: Props) => (
                 <td>{part.title}</td>
                 <td><Price value={part.price_today.price} /></td>
                 <td><a href={part.link} target='_blank'>{part.vendor}</a></td>
-                <td><SavePart save={props.saveCurrentPart} objectItem={{id: part.id, title: part.title}} /></td>
+                <td><SavePart
+                  save={props.saveCurrentPart}
+                  objectItem={{id: part.id, title: part.title, price: part.price_today.price}} />
+                </td>
               </tr>)}
             </tbody>
           </table>
         : ' '}
       </div>
       {props.saved.length
-        ? <div className="col-xs-3">
-          <h3>
-            Saved component
-          </h3>
-          <ul>
-            {props.saved.map(part =>
-              <li key={idGenerated++}>
-                {part.title}
-              </li>
-            )}
-          </ul>
-          <SaveList send={props.sendParts} saved_item={props.saved} />
-        </div>
-        : null
-      }
-      {props.list_saved
-        ? <div>URL to share <Link to={`/list/${props.list_saved.result}`}>{props.list_saved.result}</Link></div>
+        ? <SaveList
+          sendParts={props.sendParts}
+          saved={props.saved}
+          list_saved={props.list_saved}
+          total_price={props.total_price} />
         : null
       }
     </div>
@@ -75,11 +64,12 @@ Part.propTypes = {
   part: React.PropTypes.array,
   saved: React.PropTypes.array,
   autoCompleteLoad: React.PropTypes.array,
-  list_saved: React.PropTypes.object,
+  list_saved: React.PropTypes.string,
   fetchAC: React.PropTypes.func,
   fetchPart: React.PropTypes.func,
   saveCurrentPart: React.PropTypes.func,
-  sendParts: React.PropTypes.func
+  sendParts: React.PropTypes.func,
+  total_price: React.PropTypes.number
 }
 
 export default Part
