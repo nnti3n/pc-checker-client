@@ -1,15 +1,11 @@
 import React from 'react'
-import Gakky from '../assets/Gakky.png'
 import classes from './HomeView.scss'
 
 export const HomeView = () => (
   <div>
     <h4>Welcome!</h4>
-    <img
-      alt='Gakky!'
-      className={classes.duck}
-      src={Gakky} />
-    <code>Second Deployment guys!</code>
+    <img src="http://i.imgur.com/1xfhHjB.gif" title="source: imgur.com" className={classes.duck} />
+    <code>Third Deployment!</code>
   </div>
 )
 
