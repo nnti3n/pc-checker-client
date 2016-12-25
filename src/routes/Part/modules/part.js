@@ -10,6 +10,7 @@ export const RECIEVE_AC = 'RECIEVE_AC'
 export const REQUEST_PART = 'REQUEST_PART'
 export const RECIEVE_PART = 'RECIEVE_PART'
 export const SAVE_CURRENT_PART = 'SAVE_CURRENT_PART'
+export const REMOVE_PART = 'REMOVE_PART'
 export const RECIEVE_LIST = 'RECIEVE_LIST'
 export const REQUEST_SAVE_LIST = 'REQUEST_SAVE_LIST'
 export const SAVE_LIST = 'SAVE_LIST'
@@ -72,6 +73,14 @@ export function saveCurrentPart (selected): Action {
   }
 }
 
+export function removePart (part): Action {
+  console.log(part)
+  return {
+    type: REMOVE_PART,
+    payload: part
+  }
+}
+
 export const sendParts = (value): Function => {
   let arrayData = []
   for (let attr of value) {
@@ -119,6 +128,7 @@ export const actions = {
   fetchAC,
   fetchPart,
   saveCurrentPart,
+  removePart,
   requestSaveList,
   saveList,
   sendParts
@@ -127,6 +137,36 @@ export const actions = {
 // ------------------------------------
 // Action Handlers
 // ------------------------------------
+
+function handleSave (object, saved) {
+  let _saved = saved.slice()
+  if (!_saved.length) {
+    _saved.push(object)
+    _saved[_saved.length - 1].num = 1
+  } else {
+    let index = _saved.map(item => item.id).indexOf(object.id)
+    if (index < 0) {
+      object.num = 1
+      _saved.push(object)
+    } else {
+      _saved[index].num++
+    }
+  }
+  return _saved
+}
+
+function handleRemove (id, saved) {
+  let _saved = saved.slice()
+  let index = _saved.map(item => item.id).indexOf(id)
+  if (index === -1) {
+    console.log('error cant find id ', id)
+  } else if (_saved[index].num > 1) {
+    _saved[index].num --
+  } else if (index !== -1 && _saved[index].num === 1) {
+    _saved.splice(index, 1)
+  }
+  return _saved
+}
 
 const PART_ACTION_HANDLERS = {
   [REQUEST_AC]: (state: PartStateObject): PartStateObject => {
@@ -139,13 +179,19 @@ const PART_ACTION_HANDLERS = {
     return ({ ...state, parts: [], fetching: true })
   },
   [RECIEVE_PART]: (state: PartStateObject, action: {payload: Array<PartObject>}): PartStateObject => {
-    return ({ ...state, parts: action.payload, current: null, fetching: false })
+    return ({ ...state, parts: action.payload, current: {}, fetching: false })
   },
   [SAVE_CURRENT_PART]: (state: PartStateObject, action: {payload: PartObject}): PartStateObject => {
     return ({ ...state,
       current: action.payload,
-      saved: state.saved.concat(action.payload),
+      saved: handleSave(action.payload, state.saved),
       total_price: state.total_price + action.payload.price})
+  },
+  [REMOVE_PART]: (state: PartStateObject, action): PartStateObject => {
+    return ({ ...state,
+      saved: handleRemove(action.payload.id, state.saved),
+      total_price: state.total_price - action.payload.price
+    })
   },
   [REQUEST_SAVE_LIST]: (state: PartStateObject): PartStateObject => {
     return ({ ...state, sending: true })
@@ -163,7 +209,7 @@ const initialState: PartStateObject = {
   autoComplete: false,
   fetching: false,
   sending: false,
-  current: null,
+  current: {},
   autoCompleteLoad: [],
   parts: [],
   saved: [],

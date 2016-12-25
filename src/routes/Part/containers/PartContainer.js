@@ -1,6 +1,6 @@
 /* @flow */
 import { connect } from 'react-redux'
-import { fetchPart, saveCurrentPart, sendParts, fetchAC } from '../modules/part'
+import { fetchPart, saveCurrentPart, sendParts, fetchAC, removePart } from '../modules/part'
 
 import Part from '../components/Part'
 
@@ -10,6 +10,7 @@ const mapActionCreators: {fetchPart: Function, saveCurrentPart: Function, sendPa
   fetchAC,
   fetchPart,
   saveCurrentPart,
+  removePart,
   sendParts
 }
 

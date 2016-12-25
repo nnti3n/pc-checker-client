@@ -11,7 +11,7 @@ type Props = {
   id: string,
   part: Array<PartObject>,
   saved: Array<PartObject>,
-  list_saved: object,
+  list_saved: string,
   fetchPart: Function,
   saveCurrentPart: Function,
   sendParts: Function,
@@ -52,7 +52,9 @@ export const Part = (props: Props) => (
           sendParts={props.sendParts}
           saved={props.saved}
           list_saved={props.list_saved}
-          total_price={props.total_price} />
+          total_price={props.total_price}
+          removePart={props.removePart}
+        />
         : null
       }
     </div>
@@ -69,6 +71,7 @@ Part.propTypes = {
   fetchPart: React.PropTypes.func,
   saveCurrentPart: React.PropTypes.func,
   sendParts: React.PropTypes.func,
+  removePart: React.PropTypes.func,
   total_price: React.PropTypes.number
 }
 

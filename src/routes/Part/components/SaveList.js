@@ -2,7 +2,6 @@ import React from 'react'
 import { Link } from 'react-router'
 import Price from '../../../components/Price'
 
-let idGenerated = 0
 class SaveList extends React.Component {
 
   constructor (props) {
@@ -12,6 +11,7 @@ class SaveList extends React.Component {
   _onClick () {
     this.props.sendParts(this.props.saved)
   }
+
   render () {
     return (
       <div className="col-xs-3">
@@ -20,15 +20,17 @@ class SaveList extends React.Component {
         </h3>
         <ul>
           {this.props.saved.map(part =>
-            <li key={idGenerated++}>
-              {part.title} - <Price value={part.price} />
-            </li>
+            <SaveItem
+              key={part.id}
+              part={part}
+              removePart={this.props.removePart}
+            />
           )}
         </ul>
-        <button type="button" className="list-group-item">
+        <button className="list-group-item u-margin-bottom--24">
           <Price value={this.props.total_price} />
         </button>
-        <button type="button" className='btn btn-primary' onClick={this._onClick}>
+        <button className='btn btn-primary' onClick={this._onClick}>
           Save Components
         </button>
         {this.props.list_saved
@@ -43,11 +45,37 @@ class SaveList extends React.Component {
   }
 }
 
+class SaveItem extends React.Component {
+  constructor () {
+    super()
+    this._remove = this._remove.bind(this)
+  }
+  _remove () {
+    console.log(this.props)
+    this.props.removePart(this.props.part)
+  }
+  render = () => (
+    <li key={this.props.part.id}>
+      <b>{this.props.part.num}</b>
+      - {this.props.part.title}
+      - <Price value={this.props.part.price} />
+      - <span onClick={this._remove} className="glyphicon glyphicon-remove">
+      </span>
+    </li>
+  )
+}
+
+SaveItem.propTypes = {
+  removePart: React.PropTypes.func,
+  part: React.PropTypes.object
+}
+
 SaveList.propTypes = {
   sendParts: React.PropTypes.func,
   saved: React.PropTypes.array,
   list_saved: React.PropTypes.string,
-  total_price: React.PropTypes.number
+  total_price: React.PropTypes.number,
+  removePart: React.PropTypes.func
 }
 
 export default SaveList
